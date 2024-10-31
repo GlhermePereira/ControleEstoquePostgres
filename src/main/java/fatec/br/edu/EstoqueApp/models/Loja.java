@@ -10,7 +10,7 @@ public class Loja {
     }
 
     public void adicionarProduto(Produto produto) {
-        produtos.add(produto);
+        this.produtos.add(produto);
     }
 
     public void removerProduto(String codigo) {
@@ -24,8 +24,8 @@ public class Loja {
                 .orElse(null);
     }
 
-    public List<Produto> listarProdutos() {
-        return produtos;
+    public void exibirProdutos() {
+        produtos.forEach(Produto::exibirInformacoes);
     }
 
     public double calcularValorTotalEstoque() {
