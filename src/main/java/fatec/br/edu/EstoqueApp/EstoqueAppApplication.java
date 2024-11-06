@@ -23,12 +23,12 @@ public class EstoqueAppApplication implements CommandLineRunner {
 
       
         // Criando produtos
-        Produto produto1 = new Produto("001", "Teste1", 0, 0.00);
-        Produto produto2 = new Produto("002", "Teste2", 0, 0.00);
+        //Produto produto1 = new Produto("001", "Teste1", 0, 0.00);
+        //Produto produto2 = new Produto("002", "Teste2", 0, 0.00);
 
         // Adicionando produtos ao estoque pela Classe 
-        estoqueService.adicionarProduto(produto1);
-        estoqueService.adicionarProduto(produto2);
+        //estoqueService.adicionarProduto(produto1);
+        //estoqueService.adicionarProduto(produto2);
 
         while (true) {
             System.out.println("\n===== MENU PRINCIPAL =====");
@@ -87,16 +87,50 @@ public class EstoqueAppApplication implements CommandLineRunner {
 
     // Métodos de operação
     private static void adicionarProduto(Scanner scanner, EstoqueService estoqueService) {
-        System.out.print("Digite o código do produto: ");
-        String codigo = scanner.nextLine();
+    System.out.print("Digite o código do produto: ");
+    String codigo = scanner.nextLine();
+    
+    // Verificar se o produto já existe no estoque
+    Produto produtoExistente = estoqueService.buscarProdutoPorCodigo(codigo);  // Método para buscar produto pelo código
+    if (produtoExistente != null) {
+        System.out.println("Produto com o código " + codigo + " já existe no estoque.");
+        return;  // Não adiciona o produto
+    }
+        String nome;
+    while (true) {
         System.out.print("Digite o nome do produto: ");
-        String nome = scanner.nextLine();
+        nome = scanner.nextLine();
+        if (!nome.isEmpty()) break;
+        System.out.println("Nome não pode ser vazio. Tente novamente.");
+    }
+    int quantidade = -1;
+    while (quantidade <= 0) {
         System.out.print("Digite a quantidade do produto: ");
-        int quantidade = scanner.nextInt();
-        System.out.print("Digite o preço do produto: ");
-        double preco = scanner.nextDouble();
-        scanner.nextLine();  // Limpar o buffer
+        if (scanner.hasNextInt()) {
+            quantidade = scanner.nextInt();
+            if (quantidade <= 0) System.out.println("A quantidade deve ser positiva. Tente novamente.");
+        } else {
+            System.out.println("Quantidade inválida. Digite um número inteiro positivo.");
+            scanner.nextLine();  // Limpar buffer
+        }
+    }
 
+    double preco = -1;
+    while (preco <= 0) {
+        System.out.print("Digite o preço do produto: ");
+        if (scanner.hasNextDouble()) {
+            preco = scanner.nextDouble();
+            if (preco <= 0) System.out.println("O preço deve ser positivo. Tente novamente.");
+        } else {
+            System.out.println("Preço inválido. Digite um número positivo.");
+            scanner.nextLine();  // Limpar buffer
+        }
+    }
+
+    // Limpar buffer após a leitura de preço
+    scanner.nextLine();
+        
+        
         Produto novoProduto = new Produto(codigo, nome, quantidade, preco);
         estoqueService.adicionarProduto(novoProduto);
         System.out.println("Produto adicionado com sucesso!");

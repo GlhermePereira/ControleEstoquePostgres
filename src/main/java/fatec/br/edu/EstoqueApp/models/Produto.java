@@ -31,9 +31,6 @@ public class Produto {
         this.preco = preco;
     }
 
-    public void atualizarQuantidade(int novaQuantidade) {
-        this.quantidade = novaQuantidade;
-    }
 
     public double calcularValorEstoque() {
         return this.quantidade * this.preco;
@@ -46,22 +43,45 @@ public class Produto {
         System.out.println("Preço: " + preco);
         System.out.println("Valor do Estoque: " + calcularValorEstoque() + "\n");
     }
-
-    // Getters
+    // Getter e Setter para o código
     public String getCodigo() {
         return codigo;
     }
 
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    // Getter e Setter para o nome
     public String getNome() {
         return nome;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    // Getter e Setter para a quantidade
     public int getQuantidade() {
         return quantidade;
     }
 
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    // Método para atualizar a quantidade
+    public void atualizarQuantidade(int novaQuantidade) {
+        this.quantidade = novaQuantidade;
+    }
+
+    // Getter e Setter para o preço
     public double getPreco() {
         return preco;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
     }
     @Override
     public String toString() {

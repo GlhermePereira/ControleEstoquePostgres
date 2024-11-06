@@ -15,7 +15,7 @@ public class EstoqueService {
     public Produto adicionarProduto(Produto produto) {
         return produtoRepository.save(produto);
     }
-
+    
     public void removerProduto(String codigo) {
         produtoRepository.deleteById(codigo);
     }
