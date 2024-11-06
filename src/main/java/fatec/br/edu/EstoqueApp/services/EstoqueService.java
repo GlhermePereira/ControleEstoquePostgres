@@ -35,5 +35,17 @@ public class EstoqueService {
     public Double calcularValorTotalEstoque() {
         return produtoRepository.obterValorTotalEstoque();
     }
+    
+    public List<Produto> buscarPorNome(String nome) {
+        return produtoRepository.findByNome(nome);
+    }
+
+    public List<Produto> buscarPorCodigo(String codigo) {
+        return produtoRepository.findByCodigo(codigo);
+    }
+    
+    public List<Produto> findByNomeAndCodigo(String nome, String codigo){
+        return produtoRepository.findByNomeAndCodigo(nome, codigo);
+  }
 }
 

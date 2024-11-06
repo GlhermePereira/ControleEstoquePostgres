@@ -44,7 +44,7 @@ public class Produto {
         System.out.println("Nome: " + nome);
         System.out.println("Quantidade: " + quantidade);
         System.out.println("Preço: " + preco);
-        System.out.println("Valor do Estoque: " + calcularValorEstoque());
+        System.out.println("Valor do Estoque: " + calcularValorEstoque() + "\n");
     }
 
     // Getters
@@ -63,4 +63,13 @@ public class Produto {
     public double getPreco() {
         return preco;
     }
+    @Override
+    public String toString() {
+          return "Produto Código: " + codigo + "\n" +
+           "Nome: " + nome + "\n" +
+           "Quantidade: " + quantidade + "\n" +
+           "Preço: " + preco + "\n" +
+           "--------------------------"; // Linha de separação
+    }
+
 }

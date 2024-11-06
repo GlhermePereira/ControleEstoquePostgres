@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.util.List;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class EstoqueAppApplication implements CommandLineRunner {
@@ -17,32 +19,124 @@ public class EstoqueAppApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-    //Adicionando os produtos
-        Produto produto1 = new Produto("023", "BoraBill", 2, 2.00);
-        Produto produto2 = new Produto("012", "Receba", 2, 4.00);
+         Scanner scanner = new Scanner(System.in);
 
-        produto1.atualizarQuantidade(4);
-        produto1.calcularValorEstoque();
-        produto1.exibirInformacoes();
+      
+        // Criando produtos
+        Produto produto1 = new Produto("001", "Teste1", 0, 0.00);
+        Produto produto2 = new Produto("002", "Teste2", 0, 0.00);
 
-        Loja loja = new Loja();
-        loja.adicionarProduto(produto1);
-        loja.adicionarProduto(produto2);
-        System.out.println("Produtos na loja:");
-        loja.exibirProdutos();
-        
-        //removend o produto
-        loja.removerProduto("023");
-        loja.buscarProduto("023");
-        loja.exibirProdutos();
-
-        System.out.println("Valor total do estoque da loja: " + loja.calcularValorTotalEstoque());    
+        // Adicionando produtos ao estoque pela Classe 
         estoqueService.adicionarProduto(produto1);
         estoqueService.adicionarProduto(produto2);
 
+        while (true) {
+            System.out.println("\n===== MENU PRINCIPAL =====");
+            System.out.println("1. Adicionar Produto no Banco de dados");
+            System.out.println("2. Buscar Produto por Nome");
+            System.out.println("3. Buscar Produto por Código");
+            System.out.println("4. Buscar Produto por Nome e Código");
+            System.out.println("5. Listar Produtos Ordenados por Nome");
+            System.out.println("6. Listar Produtos Ordenados por Preço");
+            System.out.println("7. Calcular Valor Total do Estoque");
+            System.out.println("8. Sair \n");
+            System.out.print("Escolha uma opção: \n");
+
+            int escolha = scanner.nextInt();
+            scanner.nextLine();  // Limpar o buffer
+
+            switch (escolha) {
+                case 1:
+                    // Adicionar Produto
+                    adicionarProduto(scanner, estoqueService);
+                    break;
+                case 2:
+                    // Buscar Produto por Nome
+                    buscarProdutoPorNome(scanner, estoqueService);
+                    break;
+                case 3:
+                    // Buscar Produto por Código
+                    buscarProdutoPorCodigo(scanner, estoqueService);
+                    break;
+                case 4:
+                    // Buscar Produto por Nome e Código
+                    buscarProdutoPorNomeECodigo(scanner, estoqueService);
+                    break;
+                case 5:
+                    // Listar Produtos Ordenados por Nome
+                    listarProdutosOrdenadosPorNome(estoqueService);
+                    break;
+                case 6:
+                    // Listar Produtos Ordenados por Preço
+                    listarProdutosOrdenadosPorPreco(estoqueService);
+                    break;
+                case 7:
+                    // Calcular Valor Total do Estoque
+                    calcularValorTotalEstoque(estoqueService);
+                    break;
+                case 8:
+                    // Sair
+                    System.out.println("Saindo...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
+            }
+        }
+    }
+
+    // Métodos de operação
+    private static void adicionarProduto(Scanner scanner, EstoqueService estoqueService) {
+        System.out.print("Digite o código do produto: ");
+        String codigo = scanner.nextLine();
+        System.out.print("Digite o nome do produto: ");
+        String nome = scanner.nextLine();
+        System.out.print("Digite a quantidade do produto: ");
+        int quantidade = scanner.nextInt();
+        System.out.print("Digite o preço do produto: ");
+        double preco = scanner.nextDouble();
+        scanner.nextLine();  // Limpar o buffer
+
+        Produto novoProduto = new Produto(codigo, nome, quantidade, preco);
+        estoqueService.adicionarProduto(novoProduto);
+        System.out.println("Produto adicionado com sucesso!");
+    }
+
+    private static void buscarProdutoPorNome(Scanner scanner, EstoqueService estoqueService) {
+        System.out.print("Digite o nome do produto para buscar: ");
+        String nome = scanner.nextLine();
+        List<Produto> produtos = estoqueService.buscarPorNome(nome);
+        produtos.forEach(System.out::println);
+    }
+
+    private static void buscarProdutoPorCodigo(Scanner scanner, EstoqueService estoqueService) {
+        System.out.print("Digite o código do produto para buscar: ");
+        String codigo = scanner.nextLine();
+        List<Produto> produtos = estoqueService.buscarPorCodigo(codigo);
+        produtos.forEach(System.out::println);
+    }
+
+    private static void buscarProdutoPorNomeECodigo(Scanner scanner, EstoqueService estoqueService) {
+        System.out.print("Digite o nome do produto: ");
+        String nome = scanner.nextLine();
+        System.out.print("Digite o código do produto: ");
+        String codigo = scanner.nextLine();
+        List<Produto> produtos = estoqueService.findByNomeAndCodigo(nome, codigo);
+        produtos.forEach(System.out::println);
+    }
+
+    private static void listarProdutosOrdenadosPorNome(EstoqueService estoqueService) {
         System.out.println("Produtos ordenados por nome:");
         estoqueService.listarProdutosOrdenadosPorNome().forEach(Produto::exibirInformacoes);
+    }
 
+    private static void listarProdutosOrdenadosPorPreco(EstoqueService estoqueService) {
+        System.out.println("Produtos ordenados por preço:");
+        estoqueService.listarProdutosOrdenadosPorPreco().forEach(Produto::exibirInformacoes);
+    }
+
+    private static void calcularValorTotalEstoque(EstoqueService estoqueService) {
         System.out.println("Valor total do estoque: " + estoqueService.calcularValorTotalEstoque());
+    }
+ 
   }
-}
